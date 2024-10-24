@@ -43,6 +43,22 @@ router.post("/login", passportCall("login"),
 
     });
 
+
+    router.get("/logout", passportCall("current"),
+    (req, res) => {
+
+        try {
+            res.clearCookie("tokenCookie");
+            
+            return res.status(200).json({ payload: `Logout usuario ${req.user.email}`, user: req.user });
+
+        } catch (error) {
+            return res.status(500).send({ status: "error", error: error });
+        }
+
+    });
+    
+
 router.get("/current", passportCall("current"),
     (req, res) => {
 
@@ -57,6 +73,7 @@ router.get("/current", passportCall("current"),
         }
 
     });
+
 
 router.get('/github', passportCall("github")
 )
