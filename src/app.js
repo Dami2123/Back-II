@@ -1,6 +1,5 @@
 import express from 'express'
 import { engine } from 'express-handlebars'
-import viewRouter from './routes/views.router.js'
 import { __dirname} from './utils.js'
 import { config } from './config/config.js'
 import { Server } from 'socket.io'
@@ -29,7 +28,7 @@ app.use(passport.initialize())
 
 // Routers
 app.use("/api/sessions", sessionsRouter)
-app.use('/', viewRouter)
+
 
 
 const httpServer = app.listen(config.PORT, () => {
