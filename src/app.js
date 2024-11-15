@@ -8,6 +8,10 @@ import { inicializePassport } from './config/passport.config.js'
 import passport from 'passport'
 import cookieParser from 'cookie-parser'
 import sessionsRouter from './routes/sessions.router.js'
+import productsRouter from './routes/products.router.js'
+import cartsRouter from './routes/carts.router.js'
+import viewRouter from './routes/views.router.js'
+import { ConnDB } from './ConnDB.js';
 
 
 const app = express();
@@ -28,6 +32,9 @@ app.use(passport.initialize())
 
 // Routers
 app.use("/api/sessions", sessionsRouter)
+app.use('/api/products', productsRouter)
+app.use('/api/carts', cartsRouter)
+app.use('/', viewRouter)
 
 
 
@@ -36,14 +43,7 @@ const httpServer = app.listen(config.PORT, () => {
 });
 
 
-const connectMongoDB = async () => {
-    try {
-        await mongoose.connect(config.MONGO_URL)
-        console.log('connected to DB ecommerce')
-    } catch (error) {
-        console.log(error);
-    }
-};
+await ConnDB.onConnection(config.MONGO_URL)
 
-connectMongoDB()
+
 

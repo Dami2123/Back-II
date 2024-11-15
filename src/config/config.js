@@ -1,5 +1,11 @@
+import dotenv from "dotenv"
+
+dotenv.config({
+    path:"./src/.env", override:true
+})
+
 export const config={
-    PORT:8080, 
-    MONGO_URL: "mongodb+srv://user:admin@proyecto.10xow.mongodb.net/eCommerce?retryWrites=true&w=majority",
-    SECRET: "EcommBackend123"
+    PORT: process.env.PORT || 8080,
+    MONGO_URL: process.env.MONGO_URL,
+    SECRET: process.env.SECRET
 }

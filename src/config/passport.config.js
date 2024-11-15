@@ -2,7 +2,7 @@ import passport from "passport"
 import local from "passport-local"
 import github from "passport-github2"
 import passportJWT from "passport-jwt"
-import { UserManager } from "../services/UserManager.js"
+import { UsersService } from "../services/users.service.js"
 import { createHash, validateHash } from "../utils.js"
 import { config } from "./config.js"
 
@@ -33,7 +33,7 @@ export const inicializePassport = () => {
                     if (!first_name || !last_name || !age) {
                         return done(null, false, { message: `Complete todos los datos` })
                     }
-                    const exist = await UserManager.getBy({ email: username })
+                    const exist = await UsersService.getByfiltro({ email: username })
                     if (exist) {
                         return done(null, false, { message: `Ya existe un usuario registrado con este email: ${username}` })
                     }
@@ -57,7 +57,7 @@ export const inicializePassport = () => {
             },
             async (username, password, done) => {
                 try {
-                    const user = await UserManager.getBy({ email: username })
+                    const user = await UsersService.getBy({ email: username })
                     if (!user) {
                         return done(null, false)
                     }
@@ -90,10 +90,10 @@ export const inicializePassport = () => {
                         return done(null, false, { message: `La cuenta de Github no permite acceso a información relevante para la creación de la cuenta` })
                     }
 
-                    let user = await UserManager.getBy({ email })
+                    let user = await UsersService.getBy({ email })
 
                     if (!user) {
-                        user = await UserManager.addUser({ first_name: name, email: email })
+                        user = await UsersService.addUser({ first_name: name, email: email })
                     }
                     return done(null, user)
                 } catch (error) {
