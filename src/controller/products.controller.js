@@ -1,8 +1,9 @@
-import {ProductsService} from "../services/products.service.js"
+import {ProductsService} from "../services/products.services.js"
 
 
 export const getAllProductsController= async (req, res) => {
 
+    
     try {
         
         const products = await ProductsService.getAllProducts(req.query)

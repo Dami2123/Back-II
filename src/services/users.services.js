@@ -1,8 +1,9 @@
-import { UsersDao as users} from "../dao/users.dao.js"
+import { UsersDao as users } from "../dao/users.dao.js"
 
 export class UsersService{
+    
     static async getByfiltro(filter={}){
-        return await users.findOne(filter).lean()
+        return await users.getBy(filter)
     }
 
     static async addUser(user={}){

@@ -10,7 +10,6 @@ import cookieParser from 'cookie-parser'
 import sessionsRouter from './routes/sessions.router.js'
 import productsRouter from './routes/products.router.js'
 import cartsRouter from './routes/carts.router.js'
-import viewRouter from './routes/views.router.js'
 import { ConnDB } from './ConnDB.js';
 
 
@@ -34,7 +33,6 @@ app.use(passport.initialize())
 app.use("/api/sessions", sessionsRouter)
 app.use('/api/products', productsRouter)
 app.use('/api/carts', cartsRouter)
-app.use('/', viewRouter)
 
 
 

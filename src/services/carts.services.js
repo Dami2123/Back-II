@@ -1,17 +1,14 @@
-import ProductManager from '../services/ProductManager.js';
-import cartModel from '../dao/models/carts.model.js';
+import {CartsDao as carts} from "../dao/carts.dao.js";
+import { ProductsDao } from "../dao/products.dao.js";
 
 
 
+export class CartsService {
 
 
-
-export default class CartManager {
-
-
-    async getCartById(id) {
+    static async getCartById(id) {
         try {
-            return await cartModel.findById(id).lean().populate("products.product")
+            return await carts.getCartById(id)
         } catch (error) {
             return null
         }
@@ -19,14 +16,12 @@ export default class CartManager {
 
 
 
-    async createCart() {
+    static async createCart() {
         const newCart = {
             products: []
         }
-
         try {
-            const cart = await cartModel.create(newCart);
-
+            const cart = await carts.create(newCart);
             return cart._id
         }
         catch (error) {
@@ -35,20 +30,18 @@ export default class CartManager {
         }
     }
 
-    async addProduct(idCart, idProduct) {
+    static async addProduct(idCart, idProduct) {
 
         try {
-            const cart = await cartModel.findById(idCart)
+            const cart = await carts.getCartById(idCart)
 
             if (cart) {
-                const productManager = new ProductManager()
-                const validProduct = await productManager.getProductById(idProduct)
+                const validProduct = await ProductsDao.getProductById(idProduct)
 
                 if (validProduct) {
 
                     const existingProduct = cart.products.findIndex((element) => element.product == idProduct);
 
-                    console.log(existingProduct);
                     if (existingProduct === -1) {
                         cart.products.push({ product: idProduct, quantity: 1 })
 
@@ -56,7 +49,7 @@ export default class CartManager {
                         cart.products[existingProduct].quantity += 1;
                     }
 
-                    const cartUpdated = await cartModel.findByIdAndUpdate(idCart, { $set: { products: cart.products } });
+                    const cartUpdated = await carts.updateCartProducts(idCart, { products: cart.products });
                     return cartUpdated
 
                 }
@@ -71,18 +64,13 @@ export default class CartManager {
     }
 
 
-    async updateAllProducts(idCart, products) {
+    static async updateAllProducts(idCart, products) {
 
         try {
-            const cart = await cartModel.findById(idCart)
-
+            const cart = await carts.getCartById(idCart)
             if (cart) {
-               
-
-                    const cartUpdated = await cartModel.findByIdAndUpdate(idCart, { $set: { products: products } });
+                    const cartUpdated = await carts.updateCartProducts(idCart, { products: products });
                     return cartUpdated
-
-               
             }
             return null
         } catch (error) {
@@ -93,10 +81,10 @@ export default class CartManager {
     }
 
 
-    async updateQuantityProduct(idCart, idProduct, quantity) {
+    static async updateQuantityProduct(idCart, idProduct, quantity) {
 
         try {
-            const cart = await cartModel.findById(idCart)
+            const cart = await carts.getCartById(idCart)
 
             if (cart) {
                 const existingProduct = cart.products.findIndex((element) => element.product == idProduct);
@@ -105,7 +93,7 @@ export default class CartManager {
 
                     cart.products[existingProduct].quantity =  quantity;
 
-                    const cartUpdated = await cartModel.findByIdAndUpdate(idCart, { $set: { products: cart.products } });
+                    const cartUpdated = await carts.updateCartProducts(idCart, { products: cart.products });
                     return cartUpdated
 
                 }
@@ -119,10 +107,10 @@ export default class CartManager {
 
     }
 
-    async deleteAllProducts(idCart) {
+    static async deleteAllProducts(idCart) {
 
         try {
-            const cart = await cartModel.findByIdAndUpdate(idCart, { $set: { products: [] } });
+            const cart = await carts.updateCartProducts(idCart, { products: [] });
 
                 return true
             
@@ -133,13 +121,12 @@ export default class CartManager {
 
     }
 
-    async deleteProduct(idCart, idProduct) {
+    static async deleteProduct(idCart, idProduct) {
 
         try {
-            const cart = await cartModel.findById(idCart)
+            const cart = await carts.getCartById(idCart)
 
             if (cart) {
-                const productManager = new ProductManager()
              
               const existingProduct = cart.products.findIndex((element) => element.product == idProduct);
 
@@ -151,7 +138,7 @@ export default class CartManager {
                 cart.products.splice(existingProduct,1)
                     
 
-                const cartUpdated = await cartModel.findByIdAndUpdate(idCart, { $set: { products: cart.products } });
+                const cartUpdated = await carts.updateCartProducts(idCart, { products: cart.products });
                 return cartUpdated
 
                 
@@ -164,9 +151,6 @@ export default class CartManager {
 
 
     }
-
-
-
 
 
 

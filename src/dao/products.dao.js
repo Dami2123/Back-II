@@ -1,7 +1,7 @@
 import productModel from './models/product.model.js'
 
-export default class ProductsDao {
-
+export class ProductsDao {
+    
     static async getAllProducts(filter = {}, config = {}) {
         return await productModel.paginate(filter, config)
     }

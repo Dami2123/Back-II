@@ -1,7 +1,7 @@
 import cartModel from './models/carts.model.js';
 
 
-export default class CartsDao {
+export  class CartsDao {
 
     static async getCartById(id) {
         return await cartModel.findById(id).lean().populate("products.product")
@@ -11,9 +11,9 @@ export default class CartsDao {
         return await cartModel.create(cart);
     }
 
-    static async updateCartProducts(idCart, updProducts={}) {
+    static async updateCartProducts(idCart, updProducts) {
         return await cartModel.findByIdAndUpdate(idCart, { $set: { updProducts} });
     }
 
-
+    
 }

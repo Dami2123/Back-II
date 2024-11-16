@@ -2,7 +2,7 @@ import passport from "passport"
 import local from "passport-local"
 import github from "passport-github2"
 import passportJWT from "passport-jwt"
-import { UsersService } from "../services/users.service.js"
+import { UsersService } from "../services/users.services.js"
 import { createHash, validateHash } from "../utils.js"
 import { config } from "./config.js"
 
@@ -40,7 +40,8 @@ export const inicializePassport = () => {
 
                     password = createHash(password)
 
-                    let user = await UserManager.addUser({ first_name: first_name, last_name: last_name, email: username, age: age, password: password })
+                    let user = await UsersService.addUser({ first_name: first_name, last_name: last_name, email: username, age: age, password: password })
+                    delete user.password
                     return done(null, user)
                 } catch (error) {
                     return done(error)
@@ -57,7 +58,7 @@ export const inicializePassport = () => {
             },
             async (username, password, done) => {
                 try {
-                    const user = await UsersService.getBy({ email: username })
+                    const user = await UsersService.getByfiltro({ email: username })
                     if (!user) {
                         return done(null, false)
                     }
@@ -90,7 +91,7 @@ export const inicializePassport = () => {
                         return done(null, false, { message: `La cuenta de Github no permite acceso a información relevante para la creación de la cuenta` })
                     }
 
-                    let user = await UsersService.getBy({ email })
+                    let user = await UsersService.getByfiltro({ email })
 
                     if (!user) {
                         user = await UsersService.addUser({ first_name: name, email: email })

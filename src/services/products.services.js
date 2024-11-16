@@ -1,7 +1,7 @@
 import { ProductsDao as products } from "../dao/products.dao.js";
 
 
-export default class ProductsService {
+export class ProductsService {
 
     static async getAllProducts({ limit, page, category, stock, sort }) {
         const filter = {};
@@ -11,6 +11,8 @@ export default class ProductsService {
         if (category) filter.category = category;
         if (stock && stock === "true") filter.stock = { $gt: 0 };
         if (stock && stock === "false") filter.stock = { $eq: 0 };
+
+        
         config.limit = !limit || parseInt(limit) <= 0 ? 10 : parseInt(limit);
         config.page = !page || parseInt(page) <= 0 ? 1 : parseInt(page);
         if (sort === "desc") config.sort = { price: -1 };
