@@ -9,4 +9,5 @@ export  class UsersDao{
     static async create(user){
         return await userModel.create(user)
     }
+
 }

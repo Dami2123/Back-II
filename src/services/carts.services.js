@@ -8,7 +8,7 @@ export class CartsService {
 
     static async getCartById(id) {
         try {
-            return await carts.getCartById(id)
+            return await carts.getCartByIdProducts(id)
         } catch (error) {
             return null
         }
@@ -152,6 +152,8 @@ export class CartsService {
 
     }
 
+
+   
 
 
 }

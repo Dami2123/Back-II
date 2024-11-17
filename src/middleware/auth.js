@@ -1,13 +1,14 @@
-export const auth=rol=>{
-    return (req, res, next)=>{
-        if(!req.user || !req.user?.rol){
-            return res.status(403).json({error:`No hay rol definido`})
-        }
-        
-        if(req.user.rol!==rol){
-            return res.status(403).json({error:`No autorizado - contenido no disponible para su rol`})
-        }
+export const auth = (role = "user") => {
+    return async(req, res, next) => {
+    if (req.user.role !== role) {
+        return res.status(401).json({ error: `No posees credenciales para acceder a este contenido` })
+    }
 
+    if (req.params.cid) {
+        if(req.user.cart!= req.params.cid){
+        return res.status(401).json({ error: `No posees credenciales para acceder a este contenido` })}
+    }
         next()
     }
 }
+

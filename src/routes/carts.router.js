@@ -1,17 +1,17 @@
 import { Router } from 'express'
-import {getCartByIdController, createCartController, addProductCartController, updateAllProductsCartController, updateQuantityProductCartController, deleteAllProductsCartController, deleteProductCartController} from '../controller/carts.controller.js';
-
+import {cartTicketController, getCartByIdController, createCartController, addProductCartController, updateAllProductsCartController, updateQuantityProductCartController, deleteAllProductsCartController, deleteProductCartController} from '../controller/carts.controller.js';
+import { passportCall } from '../utils.js';
+import { auth } from '../middleware/auth.js';
 
 
 const router = Router();
 
-router.get('/:cid', getCartByIdController)
-
+router.get('/:cid', passportCall("current"),auth(), getCartByIdController)
 
 router.post('/', createCartController)
 
 
-router.post('/:cid/product/:pid', addProductCartController)
+router.post('/:cid/product/:pid', passportCall("current"),auth(), addProductCartController)
 
 
 /* El body recibe un arreglo con el siguiente formato
@@ -27,19 +27,18 @@ router.post('/:cid/product/:pid', addProductCartController)
         ]
 */
 
-
-router.put('/:cid', updateAllProductsCartController)
+router.put('/:cid', passportCall("current"),auth(),updateAllProductsCartController)
 
 
 //en el body se recibe exclusivamente el número que indica para actualizar la cantidad del  prducto indicado
-router.put('/:cid/product/:pid', updateQuantityProductCartController)
+router.put('/:cid/product/:pid', passportCall("current"),auth(), updateQuantityProductCartController)
 
 
-router.delete('/:cid', deleteAllProductsCartController)
+router.delete('/:cid', passportCall("current"),auth(), deleteAllProductsCartController)
 
+router.delete('/:cid/product/:pid',passportCall("current"),auth(), deleteProductCartController)
 
-
-router.delete('/:cid/product/:pid', deleteProductCartController)
+router.post('/:cid/purchase', passportCall("current"),auth(), cartTicketController)
 
 
 export default router;

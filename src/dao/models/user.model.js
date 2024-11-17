@@ -13,7 +13,8 @@ const schema = new mongoose.Schema({
     password: String,
     cart:  {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "carts" 
+        ref: "carts",
+        index:true
     },
     role: {
         type: String,

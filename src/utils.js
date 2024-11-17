@@ -9,11 +9,13 @@ export const __dirname = dirname(__filename)
 
 export const createHash = password => bcrypt.hashSync(password, bcrypt.genSaltSync(10))
 export const validateHash = (pass, hash) => bcrypt.compareSync(pass, hash)
+export const validaJWT=token=>jwt.verify(token, config.SECRET)
+export const generateId= ()=> Date.now().toString(30)+Math.random().toString(30).substring(2)
 
 
 export const passportCall = (strategy) => {
     return async (req, res, next) => {
-        passport.authenticate(strategy, function (err, user, info) {
+        passport.authenticate(strategy,{session:false}, function (err, user, info) {
             if (err) return next(err);
             if (!user) {
                 return res.status(401).send({ error: info.message ? info.message : info.toString() });

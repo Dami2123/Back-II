@@ -4,15 +4,14 @@ const collection = 'tickets';
 
 const schema = new mongoose.Schema((
     {
-        nroComp: String, 
-        fecha: Date, 
-        email_comprador: String,
-        total: Number, 
-        detalle:{
+        code: String, 
+        date: Date, 
+        purchaser: String,
+        amount: Number, 
+        purchase_detail:{
             type:[]
         }
-    },
-    {timestamps:true}
+    }
 ))
 
 const ticketModel = mongoose.model(collection,schema);

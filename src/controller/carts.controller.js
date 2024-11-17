@@ -1,10 +1,10 @@
 
 import {CartsService }from "../services/carts.services.js"
+import { ticketsServices } from "../services/tickets.service.js"
 
 export const getCartByIdController = async (req, res) => {
     try {
         const cartId = req.params.cid
-
         const cart = await CartsService.getCartById(cartId)
 
         if (cart) {
@@ -22,7 +22,7 @@ export const createCartController = async (req, res) => {
         const cart = await CartsService.createCart()
 
         if (cart) {
-            res.json({ status: `Carrito con id: ${cart} correctamente creado` })
+                  res.json({ status: `Carrito con id: ${cart} correctamente creado` })
         } else {
             res.status(404).json({ error: 'No se logró crear el carrito' });
         }
@@ -148,4 +148,21 @@ export const deleteProductCartController = async (req, res) => {
         console.log(error);
     }
    
+}
+
+
+export const cartTicketController = async (req, res) => {
+    try {
+        const cartId = req.params.cid
+
+        const ticket = await ticketsServices.createTicket(cartId)
+
+        if (ticket) {
+            res.json(ticket)
+        } else {
+            res.status(404).json({ error: 'No se encontró el carrito' });
+        }
+    } catch (error) {
+        console.log(error);
+    }
 }

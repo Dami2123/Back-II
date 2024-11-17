@@ -5,6 +5,7 @@ import passportJWT from "passport-jwt"
 import { UsersService } from "../services/users.services.js"
 import { createHash, validateHash } from "../utils.js"
 import { config } from "./config.js"
+import { CartsService } from "../services/carts.services.js"
 
 
 
@@ -15,6 +16,7 @@ const getToken = req => {
     if (req.cookies.tokenCookie) {
         token = req.cookies.tokenCookie
     }
+   
     return token
 }
 
@@ -37,10 +39,10 @@ export const inicializePassport = () => {
                     if (exist) {
                         return done(null, false, { message: `Ya existe un usuario registrado con este email: ${username}` })
                     }
-
+                   const cart= await CartsService.createCart()
                     password = createHash(password)
 
-                    let user = await UsersService.addUser({ first_name: first_name, last_name: last_name, email: username, age: age, password: password })
+                    let user = await UsersService.addUser({ first_name: first_name, last_name: last_name, email: username, age: age, password: password, cart: cart })
                     delete user.password
                     return done(null, user)
                 } catch (error) {
@@ -60,10 +62,10 @@ export const inicializePassport = () => {
                 try {
                     const user = await UsersService.getByfiltro({ email: username })
                     if (!user) {
-                        return done(null, false)
+                        return done(null, false, {message: "Usuario o contraseña inválidos"})
                     }
                     if (!validateHash(password, user.password)) {
-                        return done(null, false)
+                        return done(null, false, {message: "Usuario o contraseña inválidos"})
                     }
                     delete user.password
 
@@ -116,6 +118,7 @@ export const inicializePassport = () => {
                     if (!user) {
                         return done(null, false)
                     }
+                   
                     return done(null, user)
                 } catch (error) {
                     return done(error)
