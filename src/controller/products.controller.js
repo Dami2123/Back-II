@@ -2,8 +2,6 @@ import { productService as products} from "../services/products.service.js";
 
 
 export const getAllProductsController= async (req, res) => {
-
-    
     try {
         
         const products = await getAllProducts(req.query)

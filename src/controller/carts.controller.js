@@ -156,10 +156,10 @@ export const cartTicketController = async (req, res) => {
     try {
         const cartId = req.params.cid
 
-        const ticket = await createTicket(cartId)
+        const oldCart = await createTicket(cartId)
 
-        if (ticket) {
-            res.json(ticket)
+        if (oldCart) {
+            res.json({response: "Productos sin stock", oldCart})
         } else {
             res.status(404).json({ error: 'No se encontró el carrito' });
         }
@@ -272,14 +272,14 @@ const createTicket= async(idCart) =>{
         let purchaseDetail=[]
         let oldCart=[]
         let total=0
-
+       
         if (cart) {
-
             for (var i = 0; i < cart.products.length; i++){
-               const item=cart.products[i]
+                const item=cart.products[i]
                 const product = await productService.getProductById(item.product)
      
                 if (product.stock >= item.quantity) {
+                    
                     const totalProduct = item.quantity * product.price
                     total += totalProduct
                     purchaseDetail.push({
@@ -289,15 +289,15 @@ const createTicket= async(idCart) =>{
                         quanity: item.quantity,
                         total_product: totalProduct
                     })
-                    await productService.updateProduct(product._id, {stock: product.stock-item.quantity})
+                  const prueba= await productService.updateProductTicket(product._id, {stock: product.stock-item.quantity})
+                  console.log(prueba);
                 }else{
                     oldCart.push(item)
                 }
-
-             }
-        
+            }
+             
             const user= await UsersService.getByfiltro({ cart: cart._id })
-            
+            console.log( user);
             await carts.updateCartProducts(cart._id, { products: oldCart });
 
        

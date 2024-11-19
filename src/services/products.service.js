@@ -24,8 +24,13 @@ class ProductsService{
     }
 
     async updateProduct(id, updatedFields) {
-        productUpdated= await this.dao.updateProduct(id, { updatedFields });
+        productUpdated= await this.dao.updateProduct(id, updatedFields);
         return await this.dao.getProductByFilter({ _id: productUpdated._id })
+    }
+
+    async updateProductTicket(id, updatedFields) {
+        return await this.dao.updateProduct(id, updatedFields);
+        
     }
 
     async deleteProduct(id) {
