@@ -23,7 +23,7 @@ export const sessionLogin= (req, res) => {
         const token = jwt.sign(req.user, config.SECRET, { expiresIn: 3600 })
         res.cookie("tokenCookie", token, { httpOnly: true })
 
-        return res.status(200).json({ payload: `Login exitoso para ${req.user.first_name} ${req.user.last_name}`, user: req.user });
+        return res.status(200).json({ payload: `Login exitoso para ${req.user.first_name} `, user: req.user.email });
 
     } catch (error) {
         return res.status(500).send({ status: "error", error: error });

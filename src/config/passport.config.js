@@ -5,7 +5,8 @@ import passportJWT from "passport-jwt"
 import { UsersService } from "../services/users.services.js"
 import { createHash, validateHash } from "../utils.js"
 import { config } from "./config.js"
-import { CartsService } from "../services/carts.services.js"
+import { cartsService } from "../services/carts.service.js"
+import UserDTO  from "../dto/dto.user.js"
 
 
 
@@ -39,7 +40,7 @@ export const inicializePassport = () => {
                     if (exist) {
                         return done(null, false, { message: `Ya existe un usuario registrado con este email: ${username}` })
                     }
-                   const cart= await CartsService.createCart()
+                   const cart= await cartsService.createCart()
                     password = createHash(password)
 
                     let user = await UsersService.addUser({ first_name: first_name, last_name: last_name, email: username, age: age, password: password, cart: cart })
@@ -68,7 +69,6 @@ export const inicializePassport = () => {
                         return done(null, false, {message: "Usuario o contraseña inválidos"})
                     }
                     delete user.password
-
                     return done(null, user)
                 } catch (error) {
                     return done(error)
@@ -80,8 +80,8 @@ export const inicializePassport = () => {
     passport.use("github",
         new github.Strategy(
             {
-                clientID: "Iv23lii0luBD7xQGGPmv",
-                clientSecret: "d328f35d5787745ffbb394e4c7b86ec1d3f4a447",
+                clientID:config.CLIENT_ID,
+                clientSecret:config.CLIENT_SECRET,
                 callbackURL: "http://localhost:8080/api/sessions/callbackGithub"
             },
             async (token, rt, profile, done) => {
@@ -118,8 +118,8 @@ export const inicializePassport = () => {
                     if (!user) {
                         return done(null, false)
                     }
-                   
-                    return done(null, user)
+                    const userDto= new UserDTO(user)
+                    return done(null, userDto)
                 } catch (error) {
                     return done(error)
                 }

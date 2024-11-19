@@ -6,7 +6,10 @@ const schema = new mongoose.Schema((
     {
         code: String, 
         date: Date, 
-        purchaser: String,
+        purchaser: {
+            type: String,
+            index:true
+        },
         amount: Number, 
         purchase_detail:{
             type:[]

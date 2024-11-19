@@ -11,7 +11,7 @@ export  class CartsDao {
         return await cartModel.findById(id)
     }
 
-    static async create(cart) {
+    static async createCart(cart) {
         return await cartModel.create(cart);
     }
 
